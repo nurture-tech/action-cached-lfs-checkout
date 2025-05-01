@@ -107,7 +107,7 @@ runs:
 
     - name: Restore LFS cache
       uses: nurture-tech/actions-azure-cache/restore@release/nurture
-      id: lfs-cache
+      id: lfs-cache-restore
       with:
         key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
         restore-keys: lfs-v2-
@@ -121,7 +121,7 @@ runs:
 
     - name: Save LFS cache
       uses: nurture-tech/actions-azure-cache/restore@release/nurture
-      id: lfs-cache
+      id: lfs-cache-save
       if: inputs.save-cache
       with:
         path: |
