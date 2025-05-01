@@ -123,9 +123,9 @@ runs:
       shell: bash
 
     - name: Save LFS cache
-      uses: nurture-tech/actions-azure-cache/restore@release/nurture
+      uses: nurture-tech/actions-azure-cache/save@release/nurture
       id: lfs-cache-save
-      if: inputs.save-cache
+      if: inputs.save-cache == 'true'
       with:
         path: |
           .git/lfs
