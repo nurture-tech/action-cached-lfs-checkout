@@ -68,7 +68,14 @@ inputs:
       Whether to reset the repository.
     required: false
     default: true
-
+  azure_cache_account:
+    description: >
+      The Azure Cache account.
+    required: false
+    default: ""
+  azure_cache_container:
+    description: >
+      The Azure Cache container.
 runs:
   using: "composite"
   steps:
@@ -112,6 +119,10 @@ runs:
         key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
         restore-keys: lfs-v2-
         enableCrossOsArchive: ${{ inputs.enableCrossOsArchive }}
+        account: ${{ inputs.azure_cache_account }}
+        container: ${{ inputs.azure_cache_container }}
+        use-azure-cli-auth: true
+        use-fallback: false
 
     - name: Git LFS Pull
       run: |
@@ -129,6 +140,10 @@ runs:
           ${{ steps.cache-paths.outputs.CACHE_PATHS }}
         key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
         enableCrossOsArchive: ${{ inputs.enableCrossOsArchive }}
+        account: ${{ inputs.azure_cache_account }}
+        container: ${{ inputs.azure_cache_container }}
+        use-azure-cli-auth: true
+        use-fallback: false
 
     # Don't leave behind temp files in case build system checks for dirty workspace
     - name: Cleanup Temp Files
