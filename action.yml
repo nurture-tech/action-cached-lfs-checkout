@@ -58,6 +58,11 @@ inputs:
       [Learn more about cross-os caching](https://github.com/actions/cache/blob/main/tips-and-workarounds.md#cross-os-cache).
     required: false
     default: false
+  save-cache:
+    description: >
+      Whether to save the LFS cache.
+    required: false
+    default: true
 
 runs:
   using: "composite"
@@ -95,13 +100,11 @@ runs:
       shell: bash
 
     - name: Restore LFS cache
-      uses: nurture-tech/actions-azure-cache@release/nurture
+      uses: nurture-tech/actions-azure-cache/restore@release/nurture
       id: lfs-cache
       with:
-        path: |
-          .git/lfs
-          ${{ steps.cache-paths.outputs.CACHE_PATHS }}
-        key: lfs-${{ hashFiles('.lfs-assets-id') }}-v2
+        key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
+        restore-keys: lfs-v2-
         enableCrossOsArchive: ${{ inputs.enableCrossOsArchive }}
 
     - name: Git LFS Pull
@@ -109,6 +112,17 @@ runs:
         git lfs pull --include  "${{ inputs.include }}" --exclude  "${{ inputs.exclude }}"
         git submodule foreach git lfs pull --include  "${{ inputs.include }}" --exclude  "${{ inputs.exclude }}"
       shell: bash
+
+    - name: Save LFS cache
+      uses: nurture-tech/actions-azure-cache/restore@release/nurture
+      id: lfs-cache
+      if: inputs.save-cache
+      with:
+        path: |
+          .git/lfs
+          ${{ steps.cache-paths.outputs.CACHE_PATHS }}
+        key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
+        enableCrossOsArchive: ${{ inputs.enableCrossOsArchive }}
 
     # Don't leave behind temp files in case build system checks for dirty workspace
     - name: Cleanup Temp Files
