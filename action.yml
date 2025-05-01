@@ -50,14 +50,6 @@ inputs:
       'Whether to configure the token or SSH key with the local git config'
     required: false
     default: true
-  enableCrossOsArchive:
-    description: >
-      Whether the cache is cross-os compatible. This is useful to cache dependencies which
-      are independent of the runner platform. This will help reduce the consumption of the
-      cache quota and help build for multiple platforms from the same cache.
-      [Learn more about cross-os caching](https://github.com/actions/cache/blob/main/tips-and-workarounds.md#cross-os-cache).
-    required: false
-    default: false
   save-cache:
     description: >
       Whether to save the LFS cache.
@@ -68,14 +60,15 @@ inputs:
       Whether to reset the repository.
     required: false
     default: true
-  azure_cache_account:
+  azure-cache-account:
     description: >
-      The Azure Cache account.
-    required: false
-    default: ""
-  azure_cache_container:
+      The Azure storage account.
+    required: true
+  azure-cache-container:
     description: >
-      The Azure Cache container.
+      The Azure storage container.
+    required: true
+
 runs:
   using: "composite"
   steps:
@@ -118,9 +111,8 @@ runs:
       with:
         key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
         restore-keys: lfs-v2-
-        enableCrossOsArchive: ${{ inputs.enableCrossOsArchive }}
-        account: ${{ inputs.azure_cache_account }}
-        container: ${{ inputs.azure_cache_container }}
+        account: ${{ inputs.azure-cache-account }}
+        container: ${{ inputs.azure-cache-container }}
         use-azure-cli-auth: true
         use-fallback: false
 
@@ -139,9 +131,8 @@ runs:
           .git/lfs
           ${{ steps.cache-paths.outputs.CACHE_PATHS }}
         key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
-        enableCrossOsArchive: ${{ inputs.enableCrossOsArchive }}
-        account: ${{ inputs.azure_cache_account }}
-        container: ${{ inputs.azure_cache_container }}
+        account: ${{ inputs.azure-cache-account }}
+        container: ${{ inputs.azure-cache-container }}
         use-azure-cli-auth: true
         use-fallback: false
 
