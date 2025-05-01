@@ -95,7 +95,7 @@ runs:
       shell: bash
 
     - name: Restore LFS cache
-      uses: actions/cache@v4
+      uses: nurture-tech/actions-azure-cache@release/nurture
       id: lfs-cache
       with:
         path: |
