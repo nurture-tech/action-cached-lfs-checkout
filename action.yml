@@ -55,6 +55,11 @@ inputs:
       Whether to save the LFS cache.
     required: false
     default: true
+  restore-cache:
+    description: >
+      Whether to restore LFS files from the cache.
+    required: false
+    default: true
   clean:
     description: >
       Whether to reset the repository.
@@ -108,6 +113,7 @@ runs:
     - name: Restore LFS cache
       uses: nurture-tech/actions-azure-cache/restore@release/nurture
       id: lfs-cache-restore
+      if: inputs.restore-cache == 'true'
       with:
         key: lfs-v2-${{ hashFiles('.lfs-assets-id') }}
         restore-keys: lfs-v2-
