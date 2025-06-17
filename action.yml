@@ -121,6 +121,12 @@ runs:
         container: ${{ inputs.azure-cache-container }}
         use-azure-cli-auth: true
         use-fallback: false
+        
+    - name: Clean LFS objects
+      id: lfs-cache-clean
+      if: inputs.restore-cache != 'true'
+      run: rm -rf .git/lfs
+      shell: bash
 
     - name: Git LFS Pull
       run: |
